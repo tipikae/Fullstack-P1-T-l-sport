@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { ActiveElement, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { Observable, of, tap } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { Participation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,8 @@ export class HomeComponent implements OnInit {
   public pieChartType!: ChartType;
   public pieChartPlugins = [DatalabelsPlugin];
 
-  constructor(private olympicService: OlympicService) {}
+  constructor(private olympicService: OlympicService,
+              private router: Router) {}
 
   ngOnInit(): void {
     this.setChartConfig();
@@ -93,6 +95,7 @@ export class HomeComponent implements OnInit {
 
         }
       },
+      onClick: handleClick
     };
   }
 
@@ -100,3 +103,8 @@ export class HomeComponent implements OnInit {
     this.pieChartType = 'pie';
   }
 }
+function handleClick(event: ChartEvent, elements: ActiveElement[]): void {
+  let index = elements[0].index;
+  //this.router.navigateByUrl('country/' + index);
+}
+
