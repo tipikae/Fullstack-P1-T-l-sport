@@ -25,9 +25,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.setChartConfig();
-    this.olympicService.getOlympics().pipe(
-      tap( (data: Olympic[]) => this.fillData(data) )
-    ).subscribe();
+    this.olympicService.getOlympics().subscribe( (data: Olympic[]) => this.fillData(data) );
   }
 
   private fillData(olympics: Olympic[]): void {
