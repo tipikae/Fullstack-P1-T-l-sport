@@ -50,6 +50,14 @@
 .back .space20 {
     margin-left: 20px;
 }
-.back a {
+.back a.btn {
     text-decoration: none;
+    padding: 10px 20px;
+    color: white;
+    background-color: rgb(33, 155, 192);
+    border: solid 1px rgb(33, 155, 192);
+}
+.back a.btn:hover {
+    color: rgb(33, 155, 192);
+    background-color: white;
 }
