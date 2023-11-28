@@ -95,7 +95,10 @@ export class HomeComponent implements OnInit {
 
         }
       },
-      onClick: handleClick
+      onClick: (event, elements, chart) => {
+        let index = elements[0].index;
+        this.router.navigateByUrl('country/' + (index + 1));
+      }
     };
   }
 
@@ -103,8 +106,3 @@ export class HomeComponent implements OnInit {
     this.pieChartType = 'pie';
   }
 }
-function handleClick(event: ChartEvent, elements: ActiveElement[]): void {
-  let index = elements[0].index;
-  //this.router.navigateByUrl('country/' + index);
-}
-
