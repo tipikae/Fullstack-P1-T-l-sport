@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-import { ActiveElement, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
-import { Observable, of, tap } from 'rxjs';
+import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { Observable, of } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { Participation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
