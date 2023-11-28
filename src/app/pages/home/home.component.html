@@ -1,13 +1,14 @@
-<div id="home-page">
+<div class="loading-shade" *ngIf="isLoading$ | async;else home_page"></div>
+<ng-template #home_page>
     <h2 class="content-title"><span>Medals per Country</span></h2>
     <div class="columns">
         <div class="column">
             <div class="column-title"><span>Number of JOs</span></div>
-            <div class="column-value">{{ numberOfJOs$ | async }}</div>
+            <div class="column-value">{{ numberOfJOs }}</div>
         </div>
         <div class="column">
             <div class="column-title"><span>Number of countries</span></div>
-            <div class="column-value">{{ numberOfCountries$ | async }}</div>
+            <div class="column-value">{{ numberOfCountries }}</div>
         </div>
     </div>
     <div class="chart">
@@ -19,4 +20,4 @@
             [plugins]="pieChartPlugins"
         ></canvas>
     </div>
-</div>
+</ng-template>
