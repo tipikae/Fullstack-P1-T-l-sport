@@ -1,3 +1,42 @@
 * {
     font-family: 'Open Sans', 'Liberation Sans', sans-serif;
 }
+.loading-shade {
+    display: block;
+    width: 80px;
+    height: 80px;
+    position: fixed;
+    top: calc(50% - (80px / 2));
+    right: calc(50% - (80px / 2));
+}
+.loading-shade:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #219bc0;
+    border-color: #219bc0 transparent #219bc0 transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+}
+.error {
+  display: flex;
+  width: 200px;
+  height: 50px;
+  position: fixed;
+  top: calc(50% - (150px / 2));
+  right: calc(50% - (50px / 2));
+  background-color: rgb(172, 168, 168);
+  color: black;
+  text-align: center;
+  align-items: center;
+}

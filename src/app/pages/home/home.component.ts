@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-import { ActiveElement, ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
-import { Observable, of, tap } from 'rxjs';
+import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { Observable, of } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { Participation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -14,20 +14,28 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   
-  public numberOfJOs$: Observable<number> = of(0);
-  public numberOfCountries$: Observable<number> = of(0);
+  numberOfJOs: number = 0;
+  numberOfCountries: number = 0;
 
-  public pieChartData!: ChartData<'pie', number[], string | string[]>;
-  public pieChartOptions!: ChartConfiguration['options'];
-  public pieChartType!: ChartType;
-  public pieChartPlugins = [DatalabelsPlugin];
+  pieChartData!: ChartData<'pie', number[], string | string[]>;
+  pieChartOptions!: ChartConfiguration['options'];
+  pieChartType!: ChartType;
+  pieChartPlugins = [DatalabelsPlugin];
+  
+  isLoading$!: Observable<Boolean>;
+  error$!: Observable<String>;
 
   constructor(private olympicService: OlympicService,
               private router: Router) {}
 
   ngOnInit(): void {
+    this.isLoading$ = this.olympicService.isLoading$;
+    this.error$ = this.olympicService.error$
     this.setChartConfig();
-    this.olympicService.getOlympics().subscribe( (data: Olympic[]) => this.fillData(data) );
+    this.olympicService.getOlympics().subscribe({
+      next: (data: Olympic[]) => this.fillData(data),
+      //error(msg: any) => 
+    });
   }
 
   private fillData(olympics: Olympic[]): void {
@@ -37,7 +45,7 @@ export class HomeComponent implements OnInit {
   }
 
   private fillNumberOfCountries(olympics: Olympic[]): void {
-    this.numberOfCountries$ = of(olympics.length);
+    this.numberOfCountries = olympics.length;
   }
 
   private fillNumberOfJOs(olympics: Olympic[]): void {
@@ -46,7 +54,7 @@ export class HomeComponent implements OnInit {
       let participations: Participation[] = country.participations;
       numberMax < participations.length ? numberMax = participations.length : null;
     });
-    this.numberOfJOs$ = of(numberMax);
+    this.numberOfJOs = numberMax;
   }
 
   private fillChart(olympics: Olympic[]): void {

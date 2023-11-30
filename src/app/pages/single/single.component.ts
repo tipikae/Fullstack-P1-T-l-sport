@@ -4,6 +4,7 @@ import { Olympic } from 'src/app/core/models/Olympic';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-single',
@@ -12,27 +13,30 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 })
 export class SingleComponent implements OnInit {
 
-  id!: number
   arrow = faArrowLeft;
-  title!: string;
+  title: string = '';
   numberOfEntries: number = 0;
   numberOfMedals: number = 0;
   numberOfAthletes: number = 0;
 
-  public lineChartData!: ChartConfiguration['data'];
-  public lineChartOptions!: ChartConfiguration['options'];
-  public lineChartType!: ChartType;
+  lineChartData!: ChartConfiguration['data'];
+  lineChartOptions!: ChartConfiguration['options'];
+  lineChartType!: ChartType;
+
+  isLoading$!: Observable<Boolean>;
+  error$!: Observable<String>;
 
   constructor( private olympicService: OlympicService,
                private route: ActivatedRoute,
                private router: Router ) {}
 
   ngOnInit(): void {
+    this.isLoading$ = this.olympicService.isLoading$;
     this.setChartConfig();
-    this.id = this.route.snapshot.params['id'];
-    this.olympicService.getOlympic(this.id).subscribe({
-      next: (data) => this.fillData(data),
-      error: (msg) => this.router.navigateByUrl('not-found')
+    let id = this.route.snapshot.params['id'];
+    this.olympicService.getOlympic(id).subscribe({
+      next: (data: Olympic) => this.fillData(data),
+      error: (msg: any) => this.router.navigateByUrl('not-found')
     });
   }
   
