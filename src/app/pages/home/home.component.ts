@@ -23,14 +23,19 @@ export class HomeComponent implements OnInit {
   pieChartPlugins = [DatalabelsPlugin];
   
   isLoading$!: Observable<Boolean>;
+  error$!: Observable<String>;
 
   constructor(private olympicService: OlympicService,
               private router: Router) {}
 
   ngOnInit(): void {
     this.isLoading$ = this.olympicService.isLoading$;
+    this.error$ = this.olympicService.error$
     this.setChartConfig();
-    this.olympicService.getOlympics().subscribe( (data: Olympic[]) => this.fillData(data) );
+    this.olympicService.getOlympics().subscribe({
+      next: (data: Olympic[]) => this.fillData(data),
+      //error(msg: any) => 
+    });
   }
 
   private fillData(olympics: Olympic[]): void {

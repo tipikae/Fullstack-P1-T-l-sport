@@ -24,6 +24,7 @@ export class SingleComponent implements OnInit {
   lineChartType!: ChartType;
 
   isLoading$!: Observable<Boolean>;
+  error$!: Observable<String>;
 
   constructor( private olympicService: OlympicService,
                private route: ActivatedRoute,
@@ -34,8 +35,8 @@ export class SingleComponent implements OnInit {
     this.setChartConfig();
     let id = this.route.snapshot.params['id'];
     this.olympicService.getOlympic(id).subscribe({
-      next: (data) => this.fillData(data),
-      error: (msg) => this.router.navigateByUrl('not-found')
+      next: (data: Olympic) => this.fillData(data),
+      error: (msg: any) => this.router.navigateByUrl('not-found')
     });
   }
   
