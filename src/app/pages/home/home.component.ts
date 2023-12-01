@@ -32,10 +32,9 @@ export class HomeComponent implements OnInit {
     this.isLoading$ = this.olympicService.isLoading$;
     this.error$ = this.olympicService.error$
     this.setChartConfig();
-    this.olympicService.getOlympics().subscribe({
-      next: (data: Olympic[]) => this.fillData(data),
-      //error(msg: any) => 
-    });
+    this.olympicService.getOlympics().subscribe(
+      (data: Olympic[]) => this.fillData(data)
+    );
   }
 
   private fillData(olympics: Olympic[]): void {

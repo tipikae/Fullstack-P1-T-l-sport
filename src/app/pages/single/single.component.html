@@ -1,6 +1,10 @@
-<div class="loading-shade" *ngIf="isLoading$ | async; else single_page"></div>
+<ng-template *ngIf="isLoading$ | async; else single_page">
+    <div class="loading-shade"></div>
+</ng-template>
 <ng-template #single_page>
-    <div class="error" *ngIf="error$ | async as error; else page">{{ error }}</div>
+    <ng-template *ngIf="error$ | async as error; else page">
+        <div class="error">{{ error }}</div>
+    </ng-template>
     <ng-template #page>
         <div class="back">
             <a class="btn" routerLink=""><fa-icon [icon]=arrow></fa-icon><span class="space20"></span><span>Back</span></a>

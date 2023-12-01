@@ -22,10 +22,16 @@ export class OlympicService {
   loadInitialData() {
     this._loading.next(true);
     return this.http.get<Olympic[]>(this.olympicUrl).pipe(
-      tap((value) => this.olympics$.next(value)),
+      tap((value) => {
+        if (Array.isArray(value) && value.length > 0) {
+          this._error.next('');
+          this.olympics$.next(value);
+        } else {
+          this._error.next('No data found');
+        }
+      }),
       catchError((error, caught) => {
         this._error.next('An error occured retrieving data');
-        this.olympics$.next([]);
         return caught;
       }),
       finalize(() => this._loading.next(false))
@@ -33,9 +39,7 @@ export class OlympicService {
   }
 
   getOlympics(): Observable<Olympic[]> {
-    return this.olympics$.asObservable().pipe(
-      filter(value => typeof value != 'undefined' && value.length > 0)
-    );
+    return this.olympics$.asObservable();
   }
 
   getOlympic(id: number): Observable<Olympic> {
