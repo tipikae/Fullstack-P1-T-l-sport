@@ -7,6 +7,9 @@ import { Participation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Router } from '@angular/router';
 
+/**
+ * Home page component.
+ */
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',

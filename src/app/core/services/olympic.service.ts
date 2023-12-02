@@ -4,6 +4,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { catchError, filter, finalize, map, tap } from 'rxjs/operators';
 import { Olympic } from '../models/Olympic';
 
+/**
+ * Service class for Olympic.
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -19,7 +22,11 @@ export class OlympicService {
 
   constructor(private http: HttpClient) {}
 
-  loadInitialData() {
+  /**
+   * Load initial data.
+   * @returns {Observable<Olympic[]} An Olympic array observable. 
+   */
+  loadInitialData(): Observable<Olympic[]> {
     this._loading.next(true);
     return this.http.get<Olympic[]>(this.olympicUrl).pipe(
       tap((value) => {
@@ -38,10 +45,19 @@ export class OlympicService {
     );
   }
 
+  /**
+   * Get all Olympic.
+   * @returns {Observable<Olympic[]} An Olympic array observable.
+   */
   getOlympics(): Observable<Olympic[]> {
     return this.olympics$.asObservable();
   }
 
+  /**
+   * Get one Olympic by id.
+   * @param {number}  id  The id to get. 
+   * @returns {Olympic} An olympic.
+   */
   getOlympic(id: number): Observable<Olympic> {
     return this.olympics$.asObservable().pipe(
       filter(value => typeof value != 'undefined' && value.length > 0),

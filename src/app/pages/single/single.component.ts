@@ -6,6 +6,9 @@ import { ChartConfiguration, ChartType } from 'chart.js';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
 
+/**
+ * Single country page component.
+ */
 @Component({
   selector: 'app-single',
   templateUrl: './single.component.html',
