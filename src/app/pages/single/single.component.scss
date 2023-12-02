@@ -1,4 +1,4 @@
-#home-page {
+#single-page {
     margin-bottom: 40px;
 }
 .content-title {
@@ -37,7 +37,7 @@
 @media (min-width: 781px) {
     .columns {
         flex-direction: row;
-        width: 40%;
+        width: 60%;
     }
     .column {
         margin: 40px auto;
@@ -46,4 +46,21 @@
         width: 700px;
         height: 700px;
     }
+}
+.back {
+    margin: 20px;
+}
+.back .space20 {
+    margin-left: 20px;
+}
+.back a.btn {
+    text-decoration: none;
+    padding: 10px 20px;
+    color: white;
+    background-color: rgb(33, 155, 192);
+    border: solid 1px rgb(33, 155, 192);
+}
+.back a.btn:hover {
+    color: rgb(33, 155, 192);
+    background-color: white;
 }
