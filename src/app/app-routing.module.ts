@@ -4,7 +4,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { SingleComponent } from './pages/single/single.component';
 
-const routes: Routes = [
+const APP_ROUTES: Routes = [
   {
     path: '',
     component: HomeComponent,
@@ -20,7 +20,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(APP_ROUTES)],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

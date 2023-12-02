@@ -1,3 +1,6 @@
+/**
+ * Participation model.
+ */
 export interface Participation {
 
     id: number;
