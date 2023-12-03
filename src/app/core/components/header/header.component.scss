@@ -1,9 +1,16 @@
-.logo {
+#header {
     width: 100%;
+    position: relative;
+}
+#logo {
+    text-decoration: none;
+    color: black;
+}
+#logo div {
     display: flex;
     align-items: center;
 }
-.logo img {
+#logo div img {
     width: 40px;
     height: 40px;
     margin-right: 20px;
