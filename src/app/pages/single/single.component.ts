@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
+import { Statistic } from 'src/app/core/models/Statisitic';
 
 /**
  * Single country page component.
@@ -18,9 +19,10 @@ export class SingleComponent implements OnInit {
 
   arrow = faArrowLeft;
   title: string = '';
-  numberOfEntries: number = 0;
-  numberOfMedals: number = 0;
-  numberOfAthletes: number = 0;
+  statistics: Statistic[] = [];
+  numberOfEntriesTitle: string = 'Number of entries';
+  numberOfMedalsTitle: string = 'Total number of medals';
+  numberOfAthletesTitle: string = 'Total number of athletes';
 
   lineChartData!: ChartConfiguration['data'];
   lineChartOptions!: ChartConfiguration['options'];
@@ -67,7 +69,10 @@ export class SingleComponent implements OnInit {
         x: {
           title: {
             display: true,
-            text: 'Dates'
+            text: 'Dates',
+            font: {
+              size: 20
+            }
           }
         }
       },
@@ -75,34 +80,43 @@ export class SingleComponent implements OnInit {
         legend: { 
           display: false 
         },
+        tooltip: {
+          enabled: false
+        }
       },
     };
   }
 
   private fillData(olympic: Olympic): void {
     this.fillTitle(olympic);
+    this.fillStatistics(olympic);
+    this.fillChart(olympic);
+  }
+
+  private fillStatistics(olympic: Olympic) {
     this.fillNumberOfEntries(olympic);
     this.fillNumberOfMedals(olympic);
     this.fillNumberOfAthletes(olympic);
-    this.fillChart(olympic);
   }
   
   private fillNumberOfAthletes(olympic: Olympic) {
-    let athletes = 0;
-    let participations = olympic.participations;
-    participations.forEach(participation => athletes += participation.athleteCount);
-    this.numberOfAthletes = athletes;
+    let title = this.numberOfAthletesTitle;
+    let value = 0;
+    olympic.participations.forEach(participation => value += participation.athleteCount);
+    this.statistics.push({title, value});
   }
   
   private fillNumberOfMedals(olympic: Olympic) {
-    let medals = 0;
-    let participations = olympic.participations;
-    participations.forEach(participation => medals += participation.medalsCount);
-    this.numberOfMedals = medals;
+    let title = this.numberOfMedalsTitle;
+    let value = 0;
+    olympic.participations.forEach(participation => value += participation.medalsCount);
+    this.statistics.push({title, value});
   }
   
   private fillNumberOfEntries(olympic: Olympic) {
-    this.numberOfEntries = olympic.participations.length;
+    let title = this.numberOfEntriesTitle;
+    let value = olympic.participations.length;
+    this.statistics.push({title, value}); 
   }
   
   private fillTitle(olympic: Olympic) {

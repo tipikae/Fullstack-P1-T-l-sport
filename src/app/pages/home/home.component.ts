@@ -6,6 +6,7 @@ import { Olympic } from 'src/app/core/models/Olympic';
 import { Participation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Router } from '@angular/router';
+import { Statistic } from 'src/app/core/models/Statisitic';
 
 /**
  * Home page component.
@@ -17,8 +18,9 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   
-  numberOfJOs: number = 0;
-  numberOfCountries: number = 0;
+  statistics: Statistic[] = [];
+  numberOfJOsTitle: string = 'Number of JOs';
+  numberOfCountriesTitle = 'Number of countries';
 
   pieChartData!: ChartData<'pie', number[], string | string[]>;
   pieChartOptions!: ChartConfiguration['options'];
@@ -41,22 +43,29 @@ export class HomeComponent implements OnInit {
   }
 
   private fillData(olympics: Olympic[]): void {
-    this.fillNumberOfCountries(olympics);
-    this.fillNumberOfJOs(olympics);
+    this.fillStatistics(olympics);
     this.fillChart(olympics);
   }
 
-  private fillNumberOfCountries(olympics: Olympic[]): void {
-    this.numberOfCountries = olympics.length;
+  private fillStatistics(olympics: Olympic[]) {
+    this.fillNumberOfJOs(olympics);
+    this.fillNumberOfCountries(olympics);
   }
 
   private fillNumberOfJOs(olympics: Olympic[]): void {
-    let numberMax = 0;
+    let title = this.numberOfJOsTitle;
+    let value = 0;
     olympics.forEach(country => {
       let participations: Participation[] = country.participations;
-      numberMax < participations.length ? numberMax = participations.length : null;
+      value < participations.length ? value = participations.length : null;
     });
-    this.numberOfJOs = numberMax;
+    this.statistics.push({title, value});
+  }
+
+  private fillNumberOfCountries(olympics: Olympic[]): void {
+    let title = this.numberOfCountriesTitle;
+    let value = olympics.length;
+    this.statistics.push({title, value});
   }
 
   private fillChart(olympics: Olympic[]): void {
