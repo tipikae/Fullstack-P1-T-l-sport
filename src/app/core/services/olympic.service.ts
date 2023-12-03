@@ -50,7 +50,9 @@ export class OlympicService {
    * @returns {Observable<Olympic[]} An Olympic array observable.
    */
   getOlympics(): Observable<Olympic[]> {
-    return this.olympics$.asObservable();
+    return this.olympics$.asObservable().pipe(
+      filter(value => typeof value != 'undefined' && value.length > 0)
+    );
   }
 
   /**
