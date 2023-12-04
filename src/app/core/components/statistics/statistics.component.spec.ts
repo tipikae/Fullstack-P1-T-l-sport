@@ -7,9 +7,7 @@ describe('StatisticComponent', () => {
   let fixture: ComponentFixture<StatisticsComponent>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [StatisticsComponent]
-    })
+    await TestBed.configureTestingModule({})
     .compileComponents();
     
     fixture = TestBed.createComponent(StatisticsComponent);
