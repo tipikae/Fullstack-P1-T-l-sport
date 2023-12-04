@@ -38,21 +38,27 @@ export class HomeComponent implements OnInit {
     this.error$ = this.olympicService.error$
     this.setChartConfig();
     this.olympicService.getOlympics().subscribe(
-      (data: Olympic[]) => this.fillData(data)
+      (data: Olympic[]) => {
+        this.setStatistics(data);
+        this.setChart(data);
+      }
     );
   }
 
-  private fillData(olympics: Olympic[]): void {
-    this.fillStatistics(olympics);
-    this.fillChart(olympics);
+  /**
+   * Set statistics component to display number of JOs and number of countries informations.
+   * @param {Olympic[]} olympics The Olympics data.
+   */
+  private setStatistics(olympics: Olympic[]) {
+    this.setNumberOfJOs(olympics);
+    this.setNumberOfCountries(olympics);
   }
 
-  private fillStatistics(olympics: Olympic[]) {
-    this.fillNumberOfJOs(olympics);
-    this.fillNumberOfCountries(olympics);
-  }
-
-  private fillNumberOfJOs(olympics: Olympic[]): void {
+  /**
+   * Set number of JOs information.
+   * @param {Olympic[]} olympics The Olympics data.
+   */
+  private setNumberOfJOs(olympics: Olympic[]): void {
     let title = this.numberOfJOsTitle;
     let value = 0;
     olympics.forEach(country => {
@@ -62,13 +68,21 @@ export class HomeComponent implements OnInit {
     this.statistics.push({title, value});
   }
 
-  private fillNumberOfCountries(olympics: Olympic[]): void {
+  /**
+   * Set number of countries information.
+   * @param {Olympic[]} olympics The Olympics data.
+   */
+  private setNumberOfCountries(olympics: Olympic[]): void {
     let title = this.numberOfCountriesTitle;
     let value = olympics.length;
     this.statistics.push({title, value});
   }
 
-  private fillChart(olympics: Olympic[]): void {
+  /**
+   * Set the pie chart data.
+   * @param {Olympic[]} olympics The Olympics data.
+   */
+  private setChart(olympics: Olympic[]): void {
     let labels: string[] = [];
     let data: number[] = [];
 
@@ -90,11 +104,17 @@ export class HomeComponent implements OnInit {
     };
   }
 
+  /**
+   * Set the chart options and type.
+   */
   private setChartConfig(): void {
     this.setChartOptions();
     this.setChartType();
   }
 
+  /**
+   * Set the chart configuration.
+   */
   private setChartOptions(): void {
     this.pieChartOptions = {
       responsive: true,
@@ -122,14 +142,18 @@ export class HomeComponent implements OnInit {
     };
   }
 
+  /**
+   * Set the chart type.
+   */
   private setChartType(): void {
     this.pieChartType = 'pie';
   }
 
-  /*
-   * Customize tooltip to insert icon.
+  /**
+   * Callback to customize tooltip of the chart in order to insert icon.
+   * @param {any} context The context of the chart.
    */
-  private externalTooltipHandler(context: any): any {
+  private externalTooltipHandler(context: any) {
     // Tooltip Element
     const {chart, tooltip} = context;
     let tooltipEl = chart.canvas.parentNode.querySelector('div');

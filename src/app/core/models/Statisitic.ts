@@ -1,5 +1,5 @@
 /**
- * Statisitic model.
+ * Statistic model.
  */
 export interface Statistic {
     title: string;
