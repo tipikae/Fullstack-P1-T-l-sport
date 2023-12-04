@@ -60,7 +60,7 @@ export class OlympicService {
    * @param {number}  id  The id of the item. 
    * @returns {Olympic} An olympic item.
    */
-  getOlympic(id: number): Observable<Olympic> {
+  getOlympicById(id: number): Observable<Olympic> {
     return this.olympics$.asObservable().pipe(
       filter(value => typeof value != 'undefined' && value.length > 0),
       map( olympics => {

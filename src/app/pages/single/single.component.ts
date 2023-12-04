@@ -39,7 +39,7 @@ export class SingleComponent implements OnInit {
     this.isLoading$ = this.olympicService.isLoading$;
     this.setChartConfig();
     let id = this.route.snapshot.params['id'];
-    this.olympicService.getOlympic(id).subscribe({
+    this.olympicService.getOlympicById(id).subscribe({
       next: (data: Olympic) => {
         this.setTitle(data);
         this.setStatistics(data);
