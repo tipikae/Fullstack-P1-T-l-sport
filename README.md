@@ -16,5 +16,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Documentation
 
+The documentation was generated with [Compodoc](https://compodoc.app/) version 1.1.23.
+
 Run `compodoc -p tsconfig.doc.json -s --disablePrivate` to generate the documentation. Navigate to `http://localhost:8080`
 

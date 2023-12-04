@@ -24,7 +24,7 @@ export class OlympicService {
 
   /**
    * Load initial data.
-   * @returns {Observable<Olympic[]} An Olympic array observable. 
+   * @returns {Observable<Olympic[]>} An Olympic array observable. 
    */
   loadInitialData(): Observable<Olympic[]> {
     this._loading.next(true);
@@ -50,13 +50,15 @@ export class OlympicService {
    * @returns {Observable<Olympic[]} An Olympic array observable.
    */
   getOlympics(): Observable<Olympic[]> {
-    return this.olympics$.asObservable();
+    return this.olympics$.asObservable().pipe(
+      filter(value => typeof value != 'undefined' && value.length > 0)
+    );
   }
 
   /**
-   * Get one Olympic by id.
-   * @param {number}  id  The id to get. 
-   * @returns {Olympic} An olympic.
+   * Get one Olympic item by id.
+   * @param {number}  id  The id of the item. 
+   * @returns {Olympic} An olympic item.
    */
   getOlympic(id: number): Observable<Olympic> {
     return this.olympics$.asObservable().pipe(
