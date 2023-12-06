@@ -9,6 +9,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { CoreModule } from './core/core.module';
 import { SingleComponent } from './pages/single/single.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   ],
   imports: [
     BrowserModule, 
+    CommonModule,
     AppRoutingModule, 
     HttpClientModule, 
     NgChartsModule, 
