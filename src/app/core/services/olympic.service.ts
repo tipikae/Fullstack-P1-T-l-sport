@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, filter, finalize, map, tap } from 'rxjs/operators';
 import { Olympic } from '../models/Olympic';
 
@@ -13,7 +13,7 @@ import { Olympic } from '../models/Olympic';
 export class OlympicService {
 
   private olympicUrl = './assets/mock/olympic.json';
-  private olympics$ = new BehaviorSubject<Olympic[]>([]);
+  private _olympics = new BehaviorSubject<Olympic[]>([]);
   private _loading = new BehaviorSubject<Boolean>(false);
   private _error = new BehaviorSubject<String>('');
 
@@ -24,7 +24,7 @@ export class OlympicService {
 
   /**
    * Load initial data.
-   * @returns {Observable<Olympic[]} An Olympic array observable. 
+   * @returns {Observable<Olympic[]>} An Olympic array observable. 
    */
   loadInitialData(): Observable<Olympic[]> {
     this._loading.next(true);
@@ -32,35 +32,37 @@ export class OlympicService {
       tap((value) => {
         if (Array.isArray(value) && value.length > 0) {
           this._error.next('');
-          this.olympics$.next(value);
+          this._olympics.next(value);
         } else {
           this._error.next('No data found');
         }
       }),
       catchError((error, caught) => {
         this._error.next('An error occured retrieving data');
-        return caught;
+        throw caught;
       }),
       finalize(() => this._loading.next(false))
     );
   }
 
   /**
-   * Get all Olympic.
-   * @returns {Observable<Olympic[]} An Olympic array observable.
+   * Get all Olympics.
+   * @returns {Observable<Olympic[]>} An Olympic array observable.
    */
   getOlympics(): Observable<Olympic[]> {
-    return this.olympics$.asObservable();
+    return this._olympics.asObservable().pipe(
+      filter(value => Array.isArray(value) && value.length > 0)
+    );
   }
 
   /**
-   * Get one Olympic by id.
-   * @param {number}  id  The id to get. 
-   * @returns {Olympic} An olympic.
+   * Get one Olympic item by id.
+   * @param {number}  id  The id of the item. 
+   * @returns {Olympic} An olympic item.
    */
-  getOlympic(id: number): Observable<Olympic> {
-    return this.olympics$.asObservable().pipe(
-      filter(value => typeof value != 'undefined' && value.length > 0),
+  getOlympicById(id: number): Observable<Olympic> {
+    return this._olympics.asObservable().pipe(
+      filter(value => Array.isArray(value) && value.length > 0),
       map( olympics => {
         let filtered = olympics.filter( olympic => olympic.id == id );
         if (filtered.length != 1) {

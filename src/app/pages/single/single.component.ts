@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { Observable } from 'rxjs';
+import { Statistic } from 'src/app/core/models/Statisitic';
 
 /**
  * Single country page component.
@@ -18,9 +19,10 @@ export class SingleComponent implements OnInit {
 
   arrow = faArrowLeft;
   title: string = '';
-  numberOfEntries: number = 0;
-  numberOfMedals: number = 0;
-  numberOfAthletes: number = 0;
+  statistics: Statistic[] = [];
+  numberOfEntriesTitle: string = 'Number of entries';
+  numberOfMedalsTitle: string = 'Total number of medals';
+  numberOfAthletesTitle: string = 'Total number of athletes';
 
   lineChartData!: ChartConfiguration['data'];
   lineChartOptions!: ChartConfiguration['options'];
@@ -35,81 +37,75 @@ export class SingleComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading$ = this.olympicService.isLoading$;
+    this.error$ = this.olympicService.error$;
     this.setChartConfig();
     let id = this.route.snapshot.params['id'];
-    this.olympicService.getOlympic(id).subscribe({
-      next: (data: Olympic) => this.fillData(data),
+    this.olympicService.getOlympicById(id).subscribe({
+      next: (data: Olympic) => {
+        this.setTitle(data);
+        this.setStatistics(data);
+        this.setChart(data);
+      },
       error: (msg: any) => this.router.navigateByUrl('not-found')
     });
   }
-  
-  private setChartConfig(): void {
-    this.setChartOptions();
-    this.setChartType();
-  }
-  
-  private setChartType() {
-    this.lineChartType = 'line';
-  }
-  
-  private setChartOptions() {
-    this.lineChartOptions = {
-      elements: {
-        line: {
-          tension: 0,
-        },
-      },
-      scales: {
-        y: {
-          position: 'left',
-          suggestedMin: 0
-        },
-        x: {
-          title: {
-            display: true,
-            text: 'Dates'
-          }
-        }
-      },
-      plugins: {
-        legend: { 
-          display: false 
-        },
-      },
-    };
-  }
 
-  private fillData(olympic: Olympic): void {
-    this.fillTitle(olympic);
-    this.fillNumberOfEntries(olympic);
-    this.fillNumberOfMedals(olympic);
-    this.fillNumberOfAthletes(olympic);
-    this.fillChart(olympic);
+  /**
+   * Set the statistics component to display number of entries, number of medals 
+   * and number of athletes informations.
+   * @param {Olympic} olympic An olympic item.
+   */
+  private setStatistics(olympic: Olympic) {
+    this.setNumberOfEntries(olympic);
+    this.setNumberOfMedals(olympic);
+    this.setNumberOfAthletes(olympic);
   }
   
-  private fillNumberOfAthletes(olympic: Olympic) {
-    let athletes = 0;
-    let participations = olympic.participations;
-    participations.forEach(participation => athletes += participation.athleteCount);
-    this.numberOfAthletes = athletes;
+  /**
+   * Set number of entries information.
+   * @param {Olympic} olympic An olympic item.
+   */
+  private setNumberOfEntries(olympic: Olympic) {
+    let title = this.numberOfEntriesTitle;
+    let value = olympic.participations.length;
+    this.statistics.push({title, value}); 
   }
   
-  private fillNumberOfMedals(olympic: Olympic) {
-    let medals = 0;
-    let participations = olympic.participations;
-    participations.forEach(participation => medals += participation.medalsCount);
-    this.numberOfMedals = medals;
+  /**
+   * Set number of medals information.
+   * @param {Olympic} olympic An olympic item.
+   */
+  private setNumberOfMedals(olympic: Olympic) {
+    let title = this.numberOfMedalsTitle;
+    let value = 0;
+    olympic.participations.forEach(participation => value += participation.medalsCount);
+    this.statistics.push({title, value});
   }
   
-  private fillNumberOfEntries(olympic: Olympic) {
-    this.numberOfEntries = olympic.participations.length;
+  /**
+   * Set number of athletes information.
+   * @param {Olympic} olympic An olympic item.
+   */
+  private setNumberOfAthletes(olympic: Olympic) {
+    let title = this.numberOfAthletesTitle;
+    let value = 0;
+    olympic.participations.forEach(participation => value += participation.athleteCount);
+    this.statistics.push({title, value});
   }
   
-  private fillTitle(olympic: Olympic) {
+  /**
+   * Set number the country title.
+   * @param {Olympic} olympic An olympic item.
+   */
+  private setTitle(olympic: Olympic) {
     this.title = olympic.country;
   }
 
-  private fillChart(olympic: Olympic): void {
+  /**
+   * Set the chart data.
+   * @param {Olympic} olympic An olympic item.
+   */
+  private setChart(olympic: Olympic): void {
     let labels: number[] = [];
     let data: number[] = [];
     let participations = olympic.participations;
@@ -129,5 +125,56 @@ export class SingleComponent implements OnInit {
       ],
       labels: labels,
     };
+  }
+  
+  /**
+   * Set the chart options and type.
+   */
+  private setChartConfig(): void {
+    this.setChartOptions();
+    this.setChartType();
+  }
+  
+  /**
+   * Set the chart options.
+   */
+  private setChartOptions() {
+    this.lineChartOptions = {
+      elements: {
+        line: {
+          tension: 0,
+        },
+      },
+      scales: {
+        y: {
+          position: 'left',
+          suggestedMin: 0
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Dates',
+            font: {
+              size: 20
+            }
+          }
+        }
+      },
+      plugins: {
+        legend: { 
+          display: false 
+        },
+        tooltip: {
+          enabled: false
+        }
+      },
+    };
+  }
+  
+  /**
+   * Set the chart type.
+   */
+  private setChartType() {
+    this.lineChartType = 'line';
   }
 }

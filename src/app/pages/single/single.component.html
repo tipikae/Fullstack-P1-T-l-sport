@@ -1,29 +1,12 @@
-<ng-template *ngIf="isLoading$ | async; else single_page">
-    <div class="loading-shade"></div>
-</ng-template>
+<div class="loading-shade" *ngIf="isLoading$ | async; else single_page"></div>
 <ng-template #single_page>
-    <ng-template *ngIf="error$ | async as error; else page">
-        <div class="error">{{ error }}</div>
-    </ng-template>
+    <div class="error" *ngIf="error$ | async as error; else page">{{ error }}</div>
     <ng-template #page>
         <div class="back">
             <a class="btn" routerLink=""><fa-icon [icon]=arrow></fa-icon><span class="space20"></span><span>Back</span></a>
         </div>
         <h2 class="content-title"><span>{{ title }}</span></h2>
-        <div class="columns">
-            <div class="column">
-                <div class="column-title"><span>Number of entries</span></div>
-                <div class="column-value">{{ numberOfEntries }}</div>
-            </div>
-            <div class="column">
-                <div class="column-title"><span>Total number of medals</span></div>
-                <div class="column-value">{{ numberOfMedals }}</div>
-            </div>
-            <div class="column">
-                <div class="column-title"><span>Total number of athletes</span></div>
-                <div class="column-value">{{ numberOfAthletes }}</div>
-            </div>
-        </div>
+        <app-statistics [statistics]="statistics"></app-statistics>
         <div class="chart">
             <canvas 
                 baseChart 

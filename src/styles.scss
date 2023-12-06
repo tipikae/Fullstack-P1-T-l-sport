@@ -1,6 +1,13 @@
 * {
     font-family: 'Open Sans', 'Liberation Sans', sans-serif;
 }
+html {
+  position: relative;
+  min-height: 100%;
+}
+#main-content {
+  margin-bottom: 100px;
+}
 .loading-shade {
     display: block;
     width: 80px;

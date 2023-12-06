@@ -1,0 +1,28 @@
+.statistics {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: auto;
+}
+.statistic {
+    text-align: center;
+    border: solid 1px #04838f;
+    border-radius: 5px;
+    margin: 10px auto;
+    padding: 10px;
+}
+.statistic-title {
+    color: grey;
+}
+.statistic-value {
+    font-weight: bold;
+}
+@media (min-width: 781px) {
+    .statistics {
+        flex-direction: row;
+        width: 40%;
+    }
+    .statistic {
+        margin: 40px auto;
+    }
+}
