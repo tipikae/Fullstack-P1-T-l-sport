@@ -37,6 +37,7 @@ export class SingleComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoading$ = this.olympicService.isLoading$;
+    this.error$ = this.olympicService.error$;
     this.setChartConfig();
     let id = this.route.snapshot.params['id'];
     this.olympicService.getOlympicById(id).subscribe({
