@@ -20,3 +20,7 @@ The documentation was generated with [Compodoc](https://compodoc.app/) version 1
 
 Run `compodoc -p tsconfig.doc.json -s --disablePrivate` to generate the documentation. Navigate to `http://localhost:8080`
 
+## Test
+
+Run `ng test` to test the project.
+
