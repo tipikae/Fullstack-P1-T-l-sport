@@ -13,7 +13,7 @@ import { Olympic } from '../models/Olympic';
 export class OlympicService {
 
   private olympicUrl = './assets/mock/olympic.json';
-  private olympics$ = new BehaviorSubject<Olympic[]>([]);
+  private _olympics = new BehaviorSubject<Olympic[]>([]);
   private _loading = new BehaviorSubject<Boolean>(false);
   private _error = new BehaviorSubject<String>('');
 
@@ -32,7 +32,7 @@ export class OlympicService {
       tap((value) => {
         if (Array.isArray(value) && value.length > 0) {
           this._error.next('');
-          this.olympics$.next(value);
+          this._olympics.next(value);
         } else {
           this._error.next('No data found');
         }
@@ -50,7 +50,7 @@ export class OlympicService {
    * @returns {Observable<Olympic[]>} An Olympic array observable.
    */
   getOlympics(): Observable<Olympic[]> {
-    return this.olympics$.asObservable().pipe(
+    return this._olympics.asObservable().pipe(
       filter(value => Array.isArray(value) && value.length > 0)
     );
   }
@@ -61,7 +61,7 @@ export class OlympicService {
    * @returns {Olympic} An olympic item.
    */
   getOlympicById(id: number): Observable<Olympic> {
-    return this.olympics$.asObservable().pipe(
+    return this._olympics.asObservable().pipe(
       filter(value => Array.isArray(value) && value.length > 0),
       map( olympics => {
         let filtered = olympics.filter( olympic => olympic.id == id );
