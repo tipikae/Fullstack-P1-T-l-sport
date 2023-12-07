@@ -19,9 +19,6 @@ import { Statistic } from 'src/app/core/models/Statisitic';
 export class HomeComponent implements OnInit {
   
   statistics: Statistic[] = [];
-  numberOfJOsTitle: string = 'Number of JOs';
-  numberOfCountriesTitle = 'Number of countries';
-
   pieChartData!: ChartData<'pie', number[], string | string[]>;
   pieChartOptions!: ChartConfiguration['options'];
   pieChartType!: ChartType;
@@ -59,7 +56,7 @@ export class HomeComponent implements OnInit {
    * @param {Olympic[]} olympics The Olympics data.
    */
   private setNumberOfJOs(olympics: Olympic[]): void {
-    let title = this.numberOfJOsTitle;
+    let title = 'Number of JOs';
     let value = 0;
     olympics.forEach(country => {
       let participations: Participation[] = country.participations;
@@ -73,7 +70,7 @@ export class HomeComponent implements OnInit {
    * @param {Olympic[]} olympics The Olympics data.
    */
   private setNumberOfCountries(olympics: Olympic[]): void {
-    let title = this.numberOfCountriesTitle;
+    let title = 'Number of countries';
     let value = olympics.length;
     this.statistics.push({title, value});
   }

@@ -20,9 +20,6 @@ export class SingleComponent implements OnInit {
   arrow = faArrowLeft;
   title: string = '';
   statistics: Statistic[] = [];
-  numberOfEntriesTitle: string = 'Number of entries';
-  numberOfMedalsTitle: string = 'Total number of medals';
-  numberOfAthletesTitle: string = 'Total number of athletes';
 
   lineChartData!: ChartConfiguration['data'];
   lineChartOptions!: ChartConfiguration['options'];
@@ -66,7 +63,7 @@ export class SingleComponent implements OnInit {
    * @param {Olympic} olympic An olympic item.
    */
   private setNumberOfEntries(olympic: Olympic) {
-    let title = this.numberOfEntriesTitle;
+    let title = 'Number of entries';
     let value = olympic.participations.length;
     this.statistics.push({title, value}); 
   }
@@ -76,7 +73,7 @@ export class SingleComponent implements OnInit {
    * @param {Olympic} olympic An olympic item.
    */
   private setNumberOfMedals(olympic: Olympic) {
-    let title = this.numberOfMedalsTitle;
+    let title = 'Total number of medals';
     let value = 0;
     olympic.participations.forEach(participation => value += participation.medalsCount);
     this.statistics.push({title, value});
@@ -87,7 +84,7 @@ export class SingleComponent implements OnInit {
    * @param {Olympic} olympic An olympic item.
    */
   private setNumberOfAthletes(olympic: Olympic) {
-    let title = this.numberOfAthletesTitle;
+    let title = 'Total number of athletes';
     let value = 0;
     olympic.participations.forEach(participation => value += participation.athleteCount);
     this.statistics.push({title, value});
