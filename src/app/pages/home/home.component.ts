@@ -19,9 +19,6 @@ import { Statistic } from 'src/app/core/models/Statisitic';
 export class HomeComponent implements OnInit {
   
   statistics: Statistic[] = [];
-  numberOfJOsTitle: string = 'Number of JOs';
-  numberOfCountriesTitle = 'Number of countries';
-
   pieChartData!: ChartData<'pie', number[], string | string[]>;
   pieChartOptions!: ChartConfiguration['options'];
   pieChartType!: ChartType;
@@ -59,7 +56,7 @@ export class HomeComponent implements OnInit {
    * @param {Olympic[]} olympics The Olympics data.
    */
   private setNumberOfJOs(olympics: Olympic[]): void {
-    let title = this.numberOfJOsTitle;
+    let title = 'Number of JOs';
     let value = 0;
     olympics.forEach(country => {
       let participations: Participation[] = country.participations;
@@ -73,7 +70,7 @@ export class HomeComponent implements OnInit {
    * @param {Olympic[]} olympics The Olympics data.
    */
   private setNumberOfCountries(olympics: Olympic[]): void {
-    let title = this.numberOfCountriesTitle;
+    let title = 'Number of countries';
     let value = olympics.length;
     this.statistics.push({title, value});
   }
@@ -155,7 +152,7 @@ export class HomeComponent implements OnInit {
    */
   private externalTooltipHandler(context: any) {
     // Tooltip Element
-    const {chart, tooltip} = context;
+    let {chart, tooltip} = context;
     let tooltipEl = chart.canvas.parentNode.querySelector('div');
   
     if (!tooltipEl) {
@@ -169,7 +166,7 @@ export class HomeComponent implements OnInit {
       tooltipEl.style.transform = 'translate(-50%, 0)';
       tooltipEl.style.transition = 'all .1s ease';
   
-      const table = document.createElement('table');
+      let table = document.createElement('table');
       table.style.margin = '0px';
   
       tooltipEl.appendChild(table);
@@ -184,41 +181,41 @@ export class HomeComponent implements OnInit {
   
     // Set Text
     if (tooltip.body) {
-      const titleLines = tooltip.title || [];
-      const bodyLines = tooltip.body.map((b: any) => b.lines);
+      let titleLines = tooltip.title || [];
+      let bodyLines = tooltip.body.map((b: any) => b.lines);
   
-      const tableHead = document.createElement('thead');
+      let tableHead = document.createElement('thead');
   
       titleLines.forEach((title: any) => {
-        const tr = document.createElement('tr');
+        let tr = document.createElement('tr');
         tr.style.borderWidth = '0';
   
-        const th = document.createElement('th');
+        let th = document.createElement('th');
         th.style.borderWidth = '0';
-        const text = document.createTextNode(title);
+        let text = document.createTextNode(title);
   
         th.appendChild(text);
         tr.appendChild(th);
         tableHead.appendChild(tr);
       });
   
-      const tableBody = document.createElement('tbody');
+      let tableBody = document.createElement('tbody');
       bodyLines.forEach((body: any, i: any) => {
-        const colors = tooltip.labelColors[i];
+        let colors = tooltip.labelColors[i];
   
-        const img = document.createElement('img');
+        let img = document.createElement('img');
         img.setAttribute('src', 'assets/img/medal.png');
         img.style.width = '20px';
         img.style.height = '20px';
   
-        const tr = document.createElement('tr');
+        let tr = document.createElement('tr');
         tr.style.backgroundColor = 'inherit';
         tr.style.borderWidth = '0';
   
-        const td = document.createElement('td');
+        let td = document.createElement('td');
         td.style.borderWidth = '0';
   
-        const text = document.createTextNode(body);
+        let text = document.createTextNode(body);
   
         td.appendChild(img);
         td.appendChild(text);
@@ -226,7 +223,7 @@ export class HomeComponent implements OnInit {
         tableBody.appendChild(tr);
       });
   
-      const tableRoot = tooltipEl.querySelector('table');
+      let tableRoot = tooltipEl.querySelector('table');
   
       // Remove old children
       while (tableRoot.firstChild) {
@@ -238,7 +235,7 @@ export class HomeComponent implements OnInit {
       tableRoot.appendChild(tableBody);
     }
   
-    const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+    let {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
   
     // Display, position, and set styles for font
     tooltipEl.style.opacity = 1;
