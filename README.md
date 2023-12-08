@@ -1,4 +1,4 @@
-[![forthebadge]<svg xmlns="http://www.w3.org/2000/svg" width="177.0999984741211" height="35" viewBox="0 0 177.0999984741211 35"><rect width="112.91666412353516" height="35" fill="#31C4F3"/><rect x="112.91666412353516" width="64.18333435058594" height="35" fill="#389AD5"/><text x="56.45833206176758" y="17.5" font-size="12" font-family="'Roboto', sans-serif" fill="#FFFFFF" text-anchor="middle" alignment-baseline="middle" letter-spacing="2">TYPESCRIPT</text><text x="145.00833129882812" y="17.5" font-size="12" font-family="'Montserrat', sans-serif" fill="#FFFFFF" text-anchor="middle" font-weight="900" alignment-baseline="middle" letter-spacing="2">5.2.2</text></svg>](https://forthebadge.com)
+![Alt text](src/assets/img/doc/typescript-5.2.2.svg "typescript-5.2.2")![Alt text](src/assets/img/doc/angular-17.0.4.svg "angular-17.0.4")![Alt text](src/assets/img/doc/npm-10.2.4.svg "npm-10.2.4")![Alt text](src/assets/img/doc/nodejs-20.10.0.svg "nodejs-20.10.0")![Alt text](src/assets/img/doc/rxjs-7.5.0.svg "rxjs-7.5.0")![Alt text](src/assets/img/doc/ng2-charts-5.0.3.svg "ng2-charts-5.0.3")
 
 
 # OlympicGamesStarter
@@ -7,7 +7,7 @@ This project shows some statistics about Olympic games and participants countrie
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.3.
 
-Don't forget to install your node_modules before starting (`npm install`).
+Run `npm install` to install your node_modules.
 
 ## Development server
 
