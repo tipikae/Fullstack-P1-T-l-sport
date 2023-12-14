@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChartConfiguration, ChartType } from 'chart.js';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Statistic } from 'src/app/core/models/Statisitic';
 
 /**
@@ -15,7 +15,7 @@ import { Statistic } from 'src/app/core/models/Statisitic';
   templateUrl: './single.component.html',
   styleUrl: './single.component.scss'
 })
-export class SingleComponent implements OnInit {
+export class SingleComponent implements OnInit, OnDestroy {
 
   arrow = faArrowLeft;
   title: string = '';
@@ -27,6 +27,7 @@ export class SingleComponent implements OnInit {
 
   isLoading$!: Observable<Boolean>;
   error$!: Observable<String>;
+  olympicSubscription!: Subscription;
 
   constructor( private olympicService: OlympicService,
                private route: ActivatedRoute,
@@ -37,14 +38,18 @@ export class SingleComponent implements OnInit {
     this.error$ = this.olympicService.error$;
     this.setChartConfig();
     let id = this.route.snapshot.params['id'];
-    this.olympicService.getOlympicById(id).subscribe({
+    this.olympicSubscription = this.olympicService.getOlympicById(id).subscribe({
       next: (data: Olympic) => {
         this.setTitle(data);
         this.setStatistics(data);
         this.setChart(data);
       },
-      error: (msg: any) => this.router.navigateByUrl('not-found')
+      error: () => this.router.navigateByUrl('not-found')
     });
+  }
+
+  ngOnDestroy(): void {
+    this.olympicSubscription.unsubscribe();
   }
 
   /**
@@ -52,7 +57,7 @@ export class SingleComponent implements OnInit {
    * and number of athletes informations.
    * @param {Olympic} olympic An olympic item.
    */
-  private setStatistics(olympic: Olympic) {
+  private setStatistics(olympic: Olympic): void {
     this.setNumberOfEntries(olympic);
     this.setNumberOfMedals(olympic);
     this.setNumberOfAthletes(olympic);
@@ -62,7 +67,7 @@ export class SingleComponent implements OnInit {
    * Set number of entries information.
    * @param {Olympic} olympic An olympic item.
    */
-  private setNumberOfEntries(olympic: Olympic) {
+  private setNumberOfEntries(olympic: Olympic): void {
     let title = 'Number of entries';
     let value = olympic.participations.length;
     this.statistics.push({title, value}); 
@@ -72,7 +77,7 @@ export class SingleComponent implements OnInit {
    * Set number of medals information.
    * @param {Olympic} olympic An olympic item.
    */
-  private setNumberOfMedals(olympic: Olympic) {
+  private setNumberOfMedals(olympic: Olympic): void {
     let title = 'Total number of medals';
     let value = 0;
     olympic.participations.forEach(participation => value += participation.medalsCount);
@@ -83,7 +88,7 @@ export class SingleComponent implements OnInit {
    * Set number of athletes information.
    * @param {Olympic} olympic An olympic item.
    */
-  private setNumberOfAthletes(olympic: Olympic) {
+  private setNumberOfAthletes(olympic: Olympic): void {
     let title = 'Total number of athletes';
     let value = 0;
     olympic.participations.forEach(participation => value += participation.athleteCount);
@@ -94,7 +99,7 @@ export class SingleComponent implements OnInit {
    * Set number the country title.
    * @param {Olympic} olympic An olympic item.
    */
-  private setTitle(olympic: Olympic) {
+  private setTitle(olympic: Olympic): void {
     this.title = olympic.country;
   }
 
@@ -135,7 +140,7 @@ export class SingleComponent implements OnInit {
   /**
    * Set the chart options.
    */
-  private setChartOptions() {
+  private setChartOptions(): void {
     this.lineChartOptions = {
       elements: {
         line: {
@@ -171,7 +176,7 @@ export class SingleComponent implements OnInit {
   /**
    * Set the chart type.
    */
-  private setChartType() {
+  private setChartType(): void {
     this.lineChartType = 'line';
   }
 }
