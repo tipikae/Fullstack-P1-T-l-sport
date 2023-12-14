@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
-import { Observable, of } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import DatalabelsPlugin, { Context } from 'chartjs-plugin-datalabels';
+import { ActiveElement, Chart, ChartConfiguration, ChartData, ChartEvent, ChartType, TooltipModel } from 'chart.js';
+import { Observable, Subscription } from 'rxjs';
 import { Olympic } from 'src/app/core/models/Olympic';
 import { Participation } from 'src/app/core/models/Participation';
 import { OlympicService } from 'src/app/core/services/olympic.service';
@@ -16,7 +16,7 @@ import { Statistic } from 'src/app/core/models/Statisitic';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   
   statistics: Statistic[] = [];
   pieChartData!: ChartData<'pie', number[], string | string[]>;
@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit {
   
   isLoading$!: Observable<Boolean>;
   error$!: Observable<String>;
+  olympicsSubscription!: Subscription;
 
   constructor(private olympicService: OlympicService,
               private router: Router) {}
@@ -34,7 +35,7 @@ export class HomeComponent implements OnInit {
     this.isLoading$ = this.olympicService.isLoading$;
     this.error$ = this.olympicService.error$
     this.setChartConfig();
-    this.olympicService.getOlympics().subscribe(
+    this.olympicsSubscription = this.olympicService.getOlympics().subscribe(
       (data: Olympic[]) => {
         this.setStatistics(data);
         this.setChart(data);
@@ -42,11 +43,15 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  ngOnDestroy(): void {
+    this.olympicsSubscription.unsubscribe();
+  }
+
   /**
    * Set statistics component to display number of JOs and number of countries informations.
    * @param {Olympic[]} olympics The Olympics data.
    */
-  private setStatistics(olympics: Olympic[]) {
+  private setStatistics(olympics: Olympic[]): void {
     this.setNumberOfJOs(olympics);
     this.setNumberOfCountries(olympics);
   }
@@ -120,10 +125,11 @@ export class HomeComponent implements OnInit {
           display: false
         },
         datalabels: {
-          formatter: (value: any, ctx: any) => {
+          formatter: (value: string, ctx: Context) => {
             if (ctx.chart.data.labels) {
               return ctx.chart.data.labels[ctx.dataIndex];
             }
+            return null;
           },
         },
         tooltip: {
@@ -132,7 +138,7 @@ export class HomeComponent implements OnInit {
           external: this.externalTooltipHandler
         }
       },
-      onClick: (event, elements, chart) => {
+      onClick: (event: ChartEvent, elements: ActiveElement[], chart: Chart) => {
         let index = elements[0].index;
         this.router.navigateByUrl('country/' + (index + 1));
       }
@@ -148,19 +154,19 @@ export class HomeComponent implements OnInit {
 
   /**
    * Callback to customize tooltip of the chart in order to insert icon.
-   * @param {any} context The context of the chart.
+   * @param context The context of the chart.
    */
-  private externalTooltipHandler(context: any) {
+  private externalTooltipHandler(context: { chart: Chart, tooltip: TooltipModel<ChartType> }): void {
     // Tooltip Element
     let {chart, tooltip} = context;
-    let tooltipEl = chart.canvas.parentNode.querySelector('div');
+    let tooltipEl = chart.canvas.parentNode!.querySelector('div');
   
     if (!tooltipEl) {
       tooltipEl = document.createElement('div');
       tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
       tooltipEl.style.borderRadius = '3px';
       tooltipEl.style.color = 'white';
-      tooltipEl.style.opacity = 1;
+      tooltipEl.style.opacity = '1';
       tooltipEl.style.pointerEvents = 'none';
       tooltipEl.style.position = 'absolute';
       tooltipEl.style.transform = 'translate(-50%, 0)';
@@ -170,23 +176,23 @@ export class HomeComponent implements OnInit {
       table.style.margin = '0px';
   
       tooltipEl.appendChild(table);
-      chart.canvas.parentNode.appendChild(tooltipEl);
+      chart.canvas.parentNode!.appendChild(tooltipEl);
     }
   
     // Hide if no tooltip
     if (tooltip.opacity === 0) {
-      tooltipEl.style.opacity = 0;
+      tooltipEl.style.opacity = '0';
       return;
     }
   
     // Set Text
     if (tooltip.body) {
       let titleLines = tooltip.title || [];
-      let bodyLines = tooltip.body.map((b: any) => b.lines);
+      let bodyLines = tooltip.body.map((b: { before: string[]; lines: string[]; after: string[] }) => b.lines);
   
       let tableHead = document.createElement('thead');
   
-      titleLines.forEach((title: any) => {
+      titleLines.forEach((title: string) => {
         let tr = document.createElement('tr');
         tr.style.borderWidth = '0';
   
@@ -200,7 +206,7 @@ export class HomeComponent implements OnInit {
       });
   
       let tableBody = document.createElement('tbody');
-      bodyLines.forEach((body: any, i: any) => {
+      bodyLines.forEach((body: string[], i: number) => {
         let colors = tooltip.labelColors[i];
   
         let img = document.createElement('img');
@@ -215,7 +221,7 @@ export class HomeComponent implements OnInit {
         let td = document.createElement('td');
         td.style.borderWidth = '0';
   
-        let text = document.createTextNode(body);
+        let text = document.createTextNode(body[0]);
   
         td.appendChild(img);
         td.appendChild(text);
@@ -226,22 +232,21 @@ export class HomeComponent implements OnInit {
       let tableRoot = tooltipEl.querySelector('table');
   
       // Remove old children
-      while (tableRoot.firstChild) {
-        tableRoot.firstChild.remove();
+      while (tableRoot!.firstChild) {
+        tableRoot!.firstChild.remove();
       }
   
       // Add new children
-      tableRoot.appendChild(tableHead);
-      tableRoot.appendChild(tableBody);
+      tableRoot!.appendChild(tableHead);
+      tableRoot!.appendChild(tableBody);
     }
   
     let {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
   
     // Display, position, and set styles for font
-    tooltipEl.style.opacity = 1;
+    tooltipEl.style.opacity = '1';
     tooltipEl.style.left = positionX + tooltip.caretX + 'px';
     tooltipEl.style.top = positionY + tooltip.caretY + 'px';
-    tooltipEl.style.font = tooltip.options.bodyFont.string;
     tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
   }
 }
